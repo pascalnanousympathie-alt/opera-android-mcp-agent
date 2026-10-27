@@ -43,13 +43,13 @@ public final class MainActivity extends Activity {
         content.setBackgroundColor(0xFFFFFFFF);
 
         TextView title = new TextView(this);
-        title.setText("Opera Android MCP Agent");
+        title.setText("Android Browser MCP Agent");
         title.setTextSize(24);
         title.setTextColor(0xFF202124);
         content.addView(title, matchWrap());
 
         TextView intro = new TextView(this);
-        intro.setText("Companion for the existing Opera browser. It does not patch or replace Opera. Enable Accessibility below to let an explicitly configured local MCP client read visible labels and perform bounded actions.");
+        intro.setText("Companion for Chrome or Opera on this Android device. It does not modify the browser. Enable Accessibility below to let an explicitly configured local MCP client read visible labels and perform bounded actions.");
         intro.setTextSize(15);
         intro.setTextColor(0xFF424242);
         intro.setPadding(0, dp(12), 0, dp(18));
@@ -72,7 +72,7 @@ public final class MainActivity extends Activity {
         security.setText(
                 "Local API: 127.0.0.1:" + OperaAccessibilityService.PORT + "\n\n" +
                 "Security: API binds to loopback only and requires a random pairing token. Password fields are blocked. Controls that appear to involve payment, sending, deletion, login, installation, or approval are blocked for manual action. The app does not submit forms automatically.\n\n" +
-                "Limit: Android 8.1 does not expose Chrome DevTools Protocol for arbitrary Opera tabs through this app. This agent uses Android Accessibility text/actions, not the hidden page DOM. Screenshots are not supported on this Android version.");
+                "Limit: Android 8.1 does not expose Chrome DevTools Protocol for arbitrary Chrome or Opera tabs through this app. This agent uses Android Accessibility text/actions, not the hidden page DOM. Screenshots are not supported on this Android version.");
         security.setTextSize(13);
         security.setTextColor(0xFF616161);
         security.setPadding(0, dp(20), 0, dp(10));
@@ -168,3 +168,5 @@ public final class MainActivity extends Activity {
         return Math.round(value * getResources().getDisplayMetrics().density);
     }
 }
+
+[executed on device: localhost (3da613ef-360b-4f88-b84a-ca0a3fb4bdb6)]
