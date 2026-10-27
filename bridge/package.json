@@ -1,0 +1,11 @@
+{
+  "name": "opera-android-mcp-agent-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Dependency-free local MCP stdio adapter for the Android Accessibility companion.",
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check server.mjs && node --check agent-client.mjs"
+  }
+}

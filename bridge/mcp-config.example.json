@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "opera-android-agent": {
+      "command": "node",
+      "args": ["/absolute/path/to/opera-android-mcp-agent/bridge/server.mjs"],
+      "env": {
+        "OPERA_AGENT_TOKEN": "SET_LOCALLY_DO_NOT_COMMIT"
+      }
+    }
+  }
+}

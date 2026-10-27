@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Opera Android MCP Agent</string>
+    <string name="accessibility_service_description">Allows an explicitly enabled local AI bridge to read visible Opera page labels and perform requested, bounded accessibility actions.</string>
+</resources>

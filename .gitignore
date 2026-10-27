@@ -1,0 +1,11 @@
+.gradle/
+**/build/
+bridge/node_modules/
+bridge/.env
+local.properties
+*.apk
+*.aab
+.DS_Store
+
+*.log
+*.exit
