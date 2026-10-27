@@ -13,18 +13,18 @@ try {
 
 const TOOL_LIST = [
   {
-    name: "opera_agent_health",
+    name: "browser_agent_health",
     description: "Check whether the local Android accessibility agent is reachable. Does not change the browser.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
   },
   {
-    name: "opera_get_active_page",
-    description: "Read visible accessibility text from the foreground Opera app; not hidden DOM or screenshot.",
+    name: "browser_get_active_page",
+    description: "Read visible accessibility text from the foreground Chrome or Opera app; not hidden DOM or screenshot.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
   },
   {
-    name: "opera_click_text",
-    description: "Click an exact visible label in Opera. Consequential labels are blocked for manual action.",
+    name: "browser_click_text",
+    description: "Click an exact visible label in Chrome or Opera. Consequential labels are blocked for manual action.",
     inputSchema: {
       type: "object",
       properties: { text: { type: "string", minLength: 1, maxLength: 200 } },
@@ -33,7 +33,7 @@ const TOOL_LIST = [
     },
   },
   {
-    name: "opera_type_text",
+    name: "browser_type_text",
     description: "Type into a focused non-password field. Does not submit the form.",
     inputSchema: {
       type: "object",
@@ -43,8 +43,8 @@ const TOOL_LIST = [
     },
   },
   {
-    name: "opera_scroll",
-    description: "Scroll the foreground Opera page forward/down or backward/up.",
+    name: "browser_scroll",
+    description: "Scroll the foreground Chrome or Opera page forward/down or backward/up.",
     inputSchema: {
       type: "object",
       properties: { direction: { type: "string", enum: ["forward", "backward", "down", "up"] } },
@@ -52,12 +52,12 @@ const TOOL_LIST = [
     },
   },
   {
-    name: "opera_go_back",
-    description: "Use Android Back while Opera is in the foreground.",
+    name: "browser_go_back",
+    description: "Use Android Back while Chrome or Opera is in the foreground.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
   },
   {
-    name: "opera_open_url",
+    name: "browser_open_url",
     description: "Open a valid HTTP(S) URL using Android's selected browser. May switch apps; does not submit forms.",
     inputSchema: {
       type: "object",
@@ -95,29 +95,29 @@ function requireObject(args) {
 
 async function callTool(name, rawArgs) {
   const args = requireObject(rawArgs);
-  if (name === "opera_agent_health") return toolResult(await client.health());
-  if (name === "opera_get_active_page") return toolResult(await client.status());
-  if (name === "opera_click_text") {
+  if (name === "browser_agent_health" || name === "opera_agent_health") return toolResult(await client.health());
+  if (name === "browser_get_active_page" || name === "opera_get_active_page") return toolResult(await client.status());
+  if (name === "browser_click_text" || name === "opera_click_text") {
     if (typeof args.text !== "string" || args.text.trim().length < 1 || args.text.length > 200) {
       throw new Error("text must be a string of 1..200 characters.");
     }
     return toolResult(await client.command({ action: "click_text", text: args.text }));
   }
-  if (name === "opera_type_text") {
+  if (name === "browser_type_text" || name === "opera_type_text") {
     if (typeof args.text !== "string" || args.text.length > 2000) {
       throw new Error("text must be a string of at most 2000 characters.");
     }
     return toolResult(await client.command({ action: "type_text", text: args.text }));
   }
-  if (name === "opera_scroll") {
+  if (name === "browser_scroll" || name === "opera_scroll") {
     const direction = args.direction === undefined ? "forward" : args.direction;
     if (!["forward", "backward", "down", "up"].includes(direction)) {
       throw new Error("direction must be forward, backward, down, or up.");
     }
     return toolResult(await client.command({ action: "scroll", direction }));
   }
-  if (name === "opera_go_back") return toolResult(await client.command({ action: "go_back" }));
-  if (name === "opera_open_url") {
+  if (name === "browser_go_back" || name === "opera_go_back") return toolResult(await client.command({ action: "go_back" }));
+  if (name === "browser_open_url" || name === "opera_open_url") {
     if (typeof args.url !== "string" || args.url.length > 2048) throw new Error("url is invalid.");
     let url;
     try { url = new URL(args.url); } catch { throw new Error("url is invalid."); }
@@ -148,7 +148,7 @@ async function handle(message) {
       rpcResult(id, {
         protocolVersion,
         capabilities: { tools: { listChanged: false } },
-        serverInfo: { name: "opera-android-accessibility-agent", version: "0.1.0" },
+        serverInfo: { name: "opera-android-accessibility-agent", version: "0.2.0" },
         instructions: "Use only with the user-authorized Android device. Accessibility exposes visible UI text, not the hidden DOM. Consequential controls require manual action.",
       });
       return;
@@ -191,3 +191,5 @@ rl.on("line", (line) => {
   }
   void handle(message);
 });
+
+[executed on device: localhost (3da613ef-360b-4f88-b84a-ca0a3fb4bdb6)]

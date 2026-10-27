@@ -1,10 +1,10 @@
-# Opera Android MCP Agent — prototype 0.1.0
+# Android Browser MCP Agent — prototype 0.2.0
 
-This is a separate Android Accessibility companion for the existing Opera One app. It does **not** modify Opera's APK or claim access to the browser's hidden DOM.
+This is a separate Android Accessibility companion for Chrome and Opera. It does **not** modify a browser APK or claim access to the browser's hidden DOM.
 
 ## Why this exists
 
-Opera's official opera-devtools-mcp expects a Chromium DevTools Protocol endpoint (such as http://127.0.0.1:9222). A standard Opera Android installation does not automatically expose that endpoint to Termux. The 0.1 prototype therefore uses Android Accessibility to read visible labels and perform a limited set of UI actions.
+Mobile Chrome and Opera do not automatically expose a local Chromium DevTools Protocol endpoint to Termux. The prototype therefore uses Android Accessibility to read visible labels and perform a limited set of UI actions in supported browsers.
 
 ## Features
 
@@ -28,9 +28,9 @@ The APK is written to:
 
 To put a copy in the phone's Downloads directory (after Termux storage access has been granted):
 
-    cp app/build/outputs/apk/debug/app-debug.apk /storage/emulated/0/Download/OperaAndroidMCPAgent-debug.apk
+    cp app/build/outputs/apk/debug/app-debug.apk /storage/emulated/0/Download/AndroidBrowserMCPAgent-debug.apk
 
-Install it from Downloads, open it, press **Enable Accessibility**, and enable **Opera Android MCP Agent** in Android Accessibility settings. Then return to the app and check the local bridge. No accessibility permission is enabled automatically.
+Install it from Downloads, open it, press **Enable Accessibility**, and enable **Android Browser MCP Agent** in Android Accessibility settings. Then return to the app and check the local bridge. No accessibility permission is enabled automatically.
 
 ## Local MCP bridge
 
@@ -41,14 +41,14 @@ Run the dependency-free JavaScript bridge on the same Android/Termux environment
 
 Use the app's **Copy pairing token** button and paste it only into Termux or a local MCP client configuration. Do not send the token in ChatGPT, paste it into an issue, or include it in screenshots. OPERA_AGENT_URL defaults to http://127.0.0.1:18765; non-loopback URLs must use HTTPS and this prototype does not provide any public tunnel.
 
-A local MCP client can start bridge/server.mjs with OPERA_AGENT_TOKEN in its environment. Because the MCP transport here uses local stdio, it is **not yet callable directly from ChatGPT's cloud**. Direct ChatGPT integration needs a separately authenticated, publicly reachable MCP endpoint and a secure outbound connection from the phone; that is a later deployment step and is intentionally not enabled by this prototype.
+A local MCP client can start bridge/server.mjs with OPERA_AGENT_TOKEN in its environment. The MCP bridge uses stdio; this device's separate secure MCP tunnel provides outbound-only transport without making the loopback HTTP API public. Tool availability inside ChatGPT depends on the signed-in plan and workspace. A healthy tunnel does not by itself prove a tool is callable in every ChatGPT conversation.
 
 ## API
 
 All requests require Authorization: Bearer <token>.
 
 - GET /health — agent reachability.
-- GET /status — active package and visible accessibility text when Opera is foregrounded.
+- GET /status — active package and visible accessibility text when Chrome or Opera is foregrounded.
 - POST /command — JSON action.
 
 Example body (do not send real credentials):
@@ -62,6 +62,8 @@ Other actions: click_text, type_text, scroll, go_back, open_url.
 - Server binds only to loopback, never 0.0.0.0.
 - Pairing token is required; app logs neither token nor page contents.
 - Password inputs and some obviously consequential buttons are blocked. This is a conservative heuristic, not a complete understanding of every website; keep oversight and do not let the agent approve payments or security prompts.
-- Accessibility text is not a complete page DOM and may omit content or labels. Some buttons in Opera may not expose useful accessibility nodes.
+- Accessibility text is not a complete page DOM and may omit content or labels. Some controls in Chrome or Opera may not expose useful accessibility nodes.
 - Android 8.1 cannot use the newer Accessibility screenshot API. Screenshot, network-panel, console, performance traces, and hidden DOM inspection are not available through this path.
 - Remote access is not configured. Do not expose this HTTP service on the internet.
+
+[executed on device: localhost (3da613ef-360b-4f88-b84a-ca0a3fb4bdb6)]
