@@ -4,7 +4,7 @@
     <application
         android:allowBackup="false"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:label="Opera Android MCP Agent"
+        android:label="Android Browser MCP Agent"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -18,7 +18,7 @@
         <service
             android:name=".OperaAccessibilityService"
             android:exported="true"
-            android:label="Opera Android MCP Agent"
+            android:label="Android Browser MCP Agent"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
@@ -29,3 +29,5 @@
         </service>
     </application>
 </manifest>
+
+[executed on device: localhost (3da613ef-360b-4f88-b84a-ca0a3fb4bdb6)]
