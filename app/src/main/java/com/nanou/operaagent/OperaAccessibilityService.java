@@ -201,11 +201,12 @@ public final class OperaAccessibilityService extends AccessibilityService {
             out.put("ok", true);
             out.put("accessibility_enabled", isAvailable());
             out.put("active_package", packageName);
-            out.put("opera_active", isOperaPackage(packageName));
-            out.put("text", isOperaPackage(packageName) && root != null ? visibleText(root, 7000) : "");
-            out.put("note", isOperaPackage(packageName)
+            out.put("browser_active", isSupportedBrowserPackage(packageName));
+            out.put("browser_name", browserName(packageName));
+            out.put("text", isSupportedBrowserPackage(packageName) && root != null ? visibleText(root, 7000) : "");
+            out.put("note", isSupportedBrowserPackage(packageName)
                     ? "Visible accessibility text only; hidden DOM data is not available on Android."
-                    : "Open Opera and keep it in the foreground before requesting page actions.");
+                    : "Open Chrome or Opera and keep it in the foreground before requesting page actions.");
         } catch (Exception e) {
             return error("Could not read the active window.");
         }
@@ -218,8 +219,8 @@ public final class OperaAccessibilityService extends AccessibilityService {
         AccessibilityNodeInfo root = getRootInActiveWindow();
         String packageName = root != null && root.getPackageName() != null
                 ? root.getPackageName().toString() : lastPackageName;
-        if (!isOperaPackage(packageName) || root == null) {
-            return error("Opera is not the active readable app. Open Opera and retry.");
+        if (!isSupportedBrowserPackage(packageName) || root == null) {
+            return error("No supported browser is active. Open Chrome or Opera and retry.");
         }
 
         try {
@@ -286,8 +287,18 @@ public final class OperaAccessibilityService extends AccessibilityService {
         }
     }
 
-    private static boolean isOperaPackage(String pkg) {
-        return pkg != null && pkg.toLowerCase(Locale.ROOT).contains("opera");
+    private static boolean isSupportedBrowserPackage(String pkg) {
+        if (pkg == null) return false;
+        String value = pkg.toLowerCase(Locale.ROOT);
+        return value.equals("com.android.chrome") || value.equals("com.chrome.beta")
+                || value.equals("com.chrome.dev") || value.contains("opera");
+    }
+
+    private static String browserName(String pkg) {
+        if (pkg == null || pkg.isEmpty()) return "unknown";
+        if (pkg.equals("com.android.chrome") || pkg.equals("com.chrome.beta") || pkg.equals("com.chrome.dev")) return "Chrome";
+        if (pkg.toLowerCase(Locale.ROOT).contains("opera")) return "Opera";
+        return "unknown";
     }
 
     private static boolean isSensitiveLabel(String value) {
@@ -428,3 +439,5 @@ public final class OperaAccessibilityService extends AccessibilityService {
         serverSocket = null;
     }
 }
+
+[executed on device: localhost (3da613ef-360b-4f88-b84a-ca0a3fb4bdb6)]
